@@ -37,7 +37,7 @@ class EnterChatView(APIView):
             if len(hashed_seed) > 64:
                 chat_code = hashed_seed[-1:62:-1]
                 Chat.objects.create(code=chat_code).save()
-                response_data['chat_code'] = chat_code.decode('latin-1').replace("'", '"')
+                response_data['chat_code'] = chat_code.decode('latin-1')
                 response_data['chat_code_client'] = uuid4().hex
                 response_status = status.HTTP_200_OK
 
@@ -56,8 +56,15 @@ class DeleteChatView(APIView):
         response_status = status.HTTP_400_BAD_REQUEST
 
         if 'chat_code' in request.data.keys():
-            chat_code = request.data['chat_code']
-            Chat.objects.filter(code=chat_code).delete()
+            found_chat = None
+            for chat in Chat.objects.all():
+                if chat.code.decode('latin-1') == request.data['chat_code']:
+                    found_chat = chat
+                    break
+                
+            if found_chat is not None:
+                found_chat.delete()
+
             response_status = status.HTTP_200_OK
         
         return Response(
