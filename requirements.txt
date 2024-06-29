@@ -2,4 +2,5 @@ Django
 python-dotenv
 djangorestframework
 django-cors-headers  
-channels
+channels==3.0.5
+daphne

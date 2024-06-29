@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import EnterChatView, DeleteChatView
+from .views import EnterChatView
 
 urlpatterns = [
-    path('enter/', EnterChatView.as_view(), name='enter_chat'),
-    path('delete/', DeleteChatView.as_view(), name='delete_chat')
+    path('enter/', EnterChatView.as_view(), name='enter_chat')
 ]
