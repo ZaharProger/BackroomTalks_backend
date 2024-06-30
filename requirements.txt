@@ -3,5 +3,4 @@ python-dotenv
 djangorestframework
 django-cors-headers  
 channels==3.0.5
-daphne
 gunicorn
