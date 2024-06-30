@@ -23,7 +23,8 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'sender': '',
-                'text': ''
+                'text': '',
+                'send_time': ''
             }
         )
 
@@ -40,14 +41,16 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'sender': request_data['sender'],
-                'text': request_data['text']
+                'text': request_data['text'],
+                'send_time': request_data['send_time']
             }
         )
     
     def chat_message(self, event):
         received_data = json.dumps({
             'sender': event['sender'],
-            'text': event['text']
+            'text': event['text'],
+            'send_time': event['send_time']
         })
 
         self.send(text_data=received_data)
