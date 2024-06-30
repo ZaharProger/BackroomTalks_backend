@@ -5,8 +5,10 @@ import json
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.chat_code = self.scope['url_route']['kwargs']['chat_code']
-        self.chat_name = f'channel{self.chat_code}'
+        request_chat_code = self.scope['url_route']['kwargs']['chat_code']
+        prepared_chat_code = ''.join([symbol for symbol in request_chat_code \
+                                  if not symbol.isdigit()])
+        self.chat_name = f'chat_{prepared_chat_code}'
 
         async_to_sync(self.channel_layer.group_add)(
             self.chat_name,
@@ -16,6 +18,15 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
     
     def disconnect(self, code):
+        async_to_sync(self.channel_layer.group_send)(
+            self.chat_name,
+            {
+                'type': 'chat_message',
+                'sender': '',
+                'text': ''
+            }
+        )
+
         async_to_sync(self.channel_layer.group_discard)(
             self.chat_name,
             self.channel_name
@@ -29,14 +40,14 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'sender': request_data['sender'],
-                'message': request_data['message']
+                'text': request_data['text']
             }
         )
     
     def chat_message(self, event):
         received_data = json.dumps({
             'sender': event['sender'],
-            'message': event['message']
+            'text': event['text']
         })
 
         self.send(text_data=received_data)
