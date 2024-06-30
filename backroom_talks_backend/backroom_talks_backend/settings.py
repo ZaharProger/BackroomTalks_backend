@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'backroom_talks_backend.wsgi.application'
+WSGI_APPLICATION = 'backroom_talks_backend.wsgi.application'
 ASGI_APPLICATION = 'backroom_talks_backend.asgi.application'
 
 CHANNEL_LAYERS = {
